@@ -21,12 +21,12 @@ public class Controller extends HttpServlet {
 		String url = request.getRequestURL().toString();
 		url = url.substring(url.lastIndexOf("/"));
 		if(url.equals("/a.ws")) {
-			RequestDispatcher rd = request.getRequestDispatcher("a.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/a.jsp");
 			request.setAttribute("hello", "this is servlet");
 			rd.forward(request, response);
 		}
 		else if( url.equals("/b.ws") ) {
-			RequestDispatcher rd = request.getRequestDispatcher("b.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/b.jsp");
 			rd.forward(request, response);
 		}
 		else if( url.equals("/c.ws") ) {
