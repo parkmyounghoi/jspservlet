@@ -41,7 +41,18 @@ public class Controller extends HttpServlet {
 			rd.forward(request, response);
 		}
 		else if( url.equals("/index.ws") ) {
-			List<FreeBoardDTO> list = dao.selectALL();
+			int pagecount = dao.selectPageCount();
+			request.setAttribute("pagecount", pagecount);
+			
+			String page = request.getParameter("page");
+			if( page == null ) {
+				page = "1";
+			}
+			
+			int ipage = Integer.parseInt(page)*10 - 9;
+			int lpage = ipage + 9;
+			
+			List<FreeBoardDTO> list = dao.selectALL(ipage,lpage);
 			request.setAttribute("list", list);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/index.jsp");

@@ -36,7 +36,7 @@ $(document).ready(function(){
 </head>
 <body>
 	<div class="container">
-		<div class="row" style="height:500px;">
+		<div class="row" style="height:430px;">
 			<form action="delete.ws" id="frm">
 				<table class="table">
 					<tr>
@@ -60,8 +60,13 @@ $(document).ready(function(){
 				</table>
 			</form>
 		</div>
+		<div class="row" style="text-align: center">
+			<c:forEach begin="1" end="${pagecount}" var="i">
+				<a href="index.ws?page=${i}">[ ${i} ]</a>
+			</c:forEach>
+		</div>
 		<div class="row">
-			<button id="insert" class="btn-primary">글쓰기</button>
+			<button type="button" id="insert" class="btn-primary">글쓰기</button>
 			<button id="delete" class="btn-primary">삭제</button>
 		</div>
 	</div>

@@ -10,7 +10,7 @@ import com.mg.org.util.DataSource;
 
 public class FreeBoardDAO {
 
-	public List<FreeBoardDTO> selectALL(){
+	public List<FreeBoardDTO> selectALL(int ipage,int lpage){
 		List<FreeBoardDTO> list = new ArrayList<FreeBoardDTO>();
 		
 		Connection conn= null;
@@ -19,7 +19,15 @@ public class FreeBoardDAO {
 		
 		try {
 			conn = DataSource.getConnection();
-			pstmt = conn.prepareStatement("select top 10 * from freeboard order by reg_date desc");
+			pstmt = conn.prepareStatement("select * from ( " + 
+										"select " + 
+										"ROW_NUMBER() over (order by idx desc) rownum " + 
+										",* " + 
+										"from freeboard ) a " + 
+										"where rownum between ? and ?");
+			pstmt.setInt(1, ipage);
+			pstmt.setInt(2, lpage);
+			
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				FreeBoardDTO dto = new FreeBoardDTO(
@@ -140,6 +148,32 @@ public class FreeBoardDAO {
 		finally {
 			DataSource.doClose(null, pstmt, conn);
 		}
+	}
+
+	public int selectPageCount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DataSource.getConnection();
+			pstmt = conn.prepareStatement("select count(*) from freeboard");
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				int rowcount = rs.getInt(1);
+				int pagecount = rowcount / 10;
+				if( rowcount%10 > 0 ) {
+					pagecount = pagecount + 1;
+				}
+				return pagecount;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			DataSource.doClose(rs, pstmt, conn);
+		}
+		return 0;
 	}
 }
 
